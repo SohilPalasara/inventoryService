@@ -19,6 +19,7 @@ public class Organization {
     @Id
     private String organizationId;
     private String organizationName;
+    @Column(unique = true)
     private String gstNo;
     private String ownerName;
     private String mobileNumber;
@@ -27,12 +28,13 @@ public class Organization {
     private Status status;
     private boolean isDeleted;
     private LocalDateTime createdAt;
-    private  LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
+
     @PrePersist
-    public  void  setValue(){
-       this.organizationId = UUID.randomUUID().toString();
-       this.createdAt = LocalDateTime.now();
-       this.updatedAt = LocalDateTime.now();
+    public void setValue() {
+        this.organizationId = UUID.randomUUID().toString();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
 }

@@ -16,20 +16,20 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationRepository organizationRepository;
 
     public ResponseModel registerOrganization(OrganizationDto organizationDto) {
-        Organization exist = organizationRepository.findByGstNoOrMobileNumber(
+        Organization exist = organizationRepository.findByIsDeletedAndGstNoOrMobileNumber(
+                false,
                 organizationDto.getGstNo(),
                 organizationDto.getMobileNumber()
         );
         if (exist != null) {
             return ResponseModel.create(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.FOUND,
                     null,
                     "Organization already exists with this GST number or mobile number or ownerName"
             );
         }
         Organization organization = organizationDto.convertToEntity();
         organizationRepository.save(organization);
-        OrganizationDto savedDto = OrganizationDto.convertToDto(organization);
         return ResponseModel.create(
                 HttpStatus.OK,
                 OrganizationDto.convertToDto(organization),

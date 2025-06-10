@@ -1,5 +1,7 @@
 package com.inventoryService.inventoryService.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inventoryService.inventoryService.entity.Organization;
 import com.inventoryService.inventoryService.enums.Status;
 import lombok.AllArgsConstructor;
@@ -18,9 +20,22 @@ public class OrganizationDto {
     private String ownerName;
     private String mobileNumber;
     private String locationOrArea;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Status status;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean isDeleted;
 
+    public static OrganizationDto convertToDto(Organization organization) {
+
+        return OrganizationDto.builder()
+                .organizationName(organization.getOrganizationName())
+                .gstNo(organization.getGstNo())
+                .ownerName(organization.getOwnerName())
+                .mobileNumber(organization.getMobileNumber())
+                .locationOrArea(organization.getLocationOrArea())
+
+                .build();
+    }
 
     public Organization convertToEntity() {
         return Organization.builder()
@@ -31,23 +46,8 @@ public class OrganizationDto {
                 .mobileNumber(this.mobileNumber)
                 .locationOrArea(this.locationOrArea)
                 .status(Status.ACTIVE)
-                .isDeleted(this.isDeleted)
                 .build();
     }
-    public static OrganizationDto convertToDto(Organization organization) {
-
-        return OrganizationDto.builder()
-                .organizationName(organization.getOrganizationName())
-                .gstNo(organization.getGstNo())
-                .ownerName(organization.getOwnerName())
-                .mobileNumber(organization.getMobileNumber())
-                .locationOrArea(organization.getLocationOrArea())
-                .status(organization.getStatus())
-                .isDeleted(organization.isDeleted())
-                .build();
-    }
-
-
 
 
 }

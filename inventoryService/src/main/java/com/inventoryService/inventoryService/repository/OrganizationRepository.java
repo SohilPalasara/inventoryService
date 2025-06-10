@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization , String> {
 
-    Organization findByGstNoOrMobileNumber(String gstNo, String mobileNumber);
+
+
+
+    Organization findByIsDeletedAndGstNoOrMobileNumber( boolean isDeleted,String gstNo, String mobileNumber);
+
 }
