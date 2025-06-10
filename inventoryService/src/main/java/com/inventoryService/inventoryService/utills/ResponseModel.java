@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 public class ResponseModel {
     private long code;
     private String status;
-    private String data;
+    private Object data;
     private String message;
 
-    public static ResponseModel create(HttpStatus httpStatus, String data, String message) {
+    public static ResponseModel create(HttpStatus httpStatus, Object data, String message) {
         return ResponseModel
                 .builder()
                 .code(httpStatus.value())

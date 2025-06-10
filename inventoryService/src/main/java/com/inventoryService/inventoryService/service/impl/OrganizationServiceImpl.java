@@ -15,11 +15,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    public ResponseModel contactSave(OrganizationDto organizationDto) {
-        Organization exist = organizationRepository.findByGstNoOrMobileNumberOrOwnerName(
+    public ResponseModel registerOrganization(OrganizationDto organizationDto) {
+        Organization exist = organizationRepository.findByGstNoOrMobileNumber(
                 organizationDto.getGstNo(),
-                organizationDto.getMobileNumber(),
-                organizationDto.getOwnerName());
+                organizationDto.getMobileNumber()
+        );
         if (exist != null) {
             return ResponseModel.create(
                     HttpStatus.NOT_FOUND,
@@ -27,11 +27,13 @@ public class OrganizationServiceImpl implements OrganizationService {
                     "Organization already exists with this GST number or mobile number or ownerName"
             );
         }
-        Organization organization = organizationDto.toEntity();
+        Organization organization = organizationDto.convertToEntity();
         organizationRepository.save(organization);
+        OrganizationDto savedDto = OrganizationDto.convertToDto(organization);
         return ResponseModel.create(
-                HttpStatus.CREATED,
-               OrganizationDto., // or convert to JSON string if needed
+                HttpStatus.OK,
+                OrganizationDto.convertToDto(organization),
                 "Organization saved successfully"
+        );
     }
 }
