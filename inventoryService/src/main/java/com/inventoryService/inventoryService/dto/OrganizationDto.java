@@ -21,7 +21,20 @@ public class OrganizationDto {
     private Status status;
     private boolean isDeleted;
 
-    public static OrganizationDto fromEntity(Organization organization) {
+
+    public Organization convertToEntity() {
+        return Organization.builder()
+
+                .organizationName(organizationName)
+                .gstNo(this.gstNo)
+                .ownerName(this.ownerName)
+                .mobileNumber(this.mobileNumber)
+                .locationOrArea(this.locationOrArea)
+                .status(Status.ACTIVE)
+                .isDeleted(this.isDeleted)
+                .build();
+    }
+    public static OrganizationDto convertToDto(Organization organization) {
 
         return OrganizationDto.builder()
                 .organizationName(organization.getOrganizationName())
@@ -34,17 +47,7 @@ public class OrganizationDto {
                 .build();
     }
 
-    public Organization toEntity() {
-        return Organization.builder()
 
-                .organizationName(organizationName)
-                .gstNo(this.gstNo)
-                .ownerName(this.ownerName)
-                .mobileNumber(this.mobileNumber)
-                .locationOrArea(this.locationOrArea)
-                .status(this.status)
-                .isDeleted(this.isDeleted)
-                .build();
-    }
+
 
 }
