@@ -25,6 +25,17 @@ public class OrganizationDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean isDeleted;
 
+    public Organization convertToEntity() {
+        return Organization.builder()
+                .organizationName(organizationName)
+                .gstNo(this.gstNo)
+                .ownerName(this.ownerName)
+                .mobileNumber(this.mobileNumber)
+                .locationOrArea(this.locationOrArea)
+                .status(Status.ACTIVE)
+                .build();
+    }
+
     public static OrganizationDto convertToDto(Organization organization) {
 
         return OrganizationDto.builder()
@@ -37,17 +48,26 @@ public class OrganizationDto {
                 .build();
     }
 
-    public Organization convertToEntity() {
-        return Organization.builder()
+    public void updateEntity(Organization organization) {
+        if (this.organizationName != null) {
+            organization.setOrganizationName(this.organizationName);
+        }
+        if (this.gstNo != null) {
+            organization.setGstNo(this.gstNo);
+        }
+        if (this.ownerName != null) {
+            organization.setOwnerName(this.ownerName);
+        }
+        if (this.mobileNumber != null) {
+            organization.setMobileNumber(this.mobileNumber);
+        }
+        if (this.locationOrArea != null) {
+            organization.setLocationOrArea(this.locationOrArea);
+        }
+        if (this.status != null) {
+            organization.setStatus(this.status);
+        }
 
-                .organizationName(organizationName)
-                .gstNo(this.gstNo)
-                .ownerName(this.ownerName)
-                .mobileNumber(this.mobileNumber)
-                .locationOrArea(this.locationOrArea)
-                .status(Status.ACTIVE)
-                .build();
     }
-
 
 }

@@ -22,6 +22,7 @@ public class Organization {
     @Column(unique = true)
     private String gstNo;
     private String ownerName;
+    @Column(unique = true)
     private String mobileNumber;
     private String locationOrArea;
     @Enumerated(EnumType.STRING)
@@ -34,6 +35,9 @@ public class Organization {
     public void setValue() {
         this.organizationId = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
+    }
+    @PreUpdate
+    public void updateTimestamp() {
         this.updatedAt = LocalDateTime.now();
     }
 
