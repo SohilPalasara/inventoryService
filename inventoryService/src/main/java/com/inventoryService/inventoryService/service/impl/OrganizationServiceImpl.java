@@ -52,13 +52,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public ResponseEntity getAllOrganization() {
         try {
-          List<Organization> organizations = organizationRepository.findByIsDeletedFalse();
+          Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
 
             if (organizations.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Organizations Found");
             }
 
-            List<OrganizationDto> organizationDtoList = organizations.stream()
+            List<OrganizationDto> organizationDtoList = organizations.get().stream()
                     .map(OrganizationDto::convertToDto)
                     .toList();
 
@@ -89,7 +89,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public ResponseModel deleteOrganization(String organizationId) {
         try {
-            Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedTrue(organizationId );
+            Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId );
             if (organization.isEmpty()) {
                 return ResponseModel.create(
                         HttpStatus.NOT_FOUND,
@@ -98,11 +98,11 @@ public class OrganizationServiceImpl implements OrganizationService {
                 );
             }
 
-           Organization organization1=  organization.get();
 
+Organization organization1 = organization.get();
             organization1.setDeleted(true);
-            organizationRepository.save(organization1);
-            OrganizationDto organizationDto = OrganizationDto.convertToDto(organization1);
+            organizationRepository.save(organization.get());
+            OrganizationDto organizationDto = OrganizationDto.convertToDto(organization.get());
             return ResponseModel.create(
                     HttpStatus.OK,
                     organizationDto,
@@ -121,14 +121,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         try {
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
 
-            if (organization == null) {
+            if (organization.isEmpty()) {
                 return ResponseModel.create(HttpStatus.NOT_FOUND, null, "Organization not found or deleted");
             }
 
-           Organization organizations = organization.get();
-            organizationDto.updateEntity(organizations);
 
-            Organization updated = organizationRepository.save(organizations);
+            organizationDto.updateEntity(organization.get());
+
+            Organization updated = organizationRepository.save(organization.get());
 
             return ResponseModel.create(
                     HttpStatus.OK,
@@ -138,6 +138,51 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         } catch (Exception e) {
             return ResponseModel.create(HttpStatus.INTERNAL_SERVER_ERROR, null, "Update failed: " + e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> searchOrganizations(String keyword) {
+        try {
+            Optional<List<Organization>> organizations = organizationRepository
+                    .findByIsDeletedFalseAndOrganizationNameContainingIgnoreCaseOrGstNoContainingIgnoreCaseOrMobileNumberContainingIgnoreCase(
+                            keyword, keyword, keyword
+                    );
+            if (organizations.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No matching organizations found.");
+            }
+
+            List<OrganizationDto > organizationDtoList = organizations.get().stream()
+                    .map(organization -> OrganizationDto.convertToDto(organization))
+                    .toList();
+
+        return ResponseEntity.ok(organizationDtoList);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error while searching: " + e.getMessage());
+    }
+    }
+    public ResponseEntity<?> searchOrganizationsType(String key , String value) {
+        try {
+//            OrganizationDto organizationDto = new OrganizationDto();
+//            List<Organization> organizations=organizationRepository.findByIsDeletedFalseAndOrganizationNameContainingIgnoreCase(keyword);
+                 List<Organization> organizations;
+
+            if (key.equalsIgnoreCase("name")) {
+                organizations = organizationRepository.findByIsDeletedFalseAndOrganizationNameContainingIgnoreCase(value);
+            } else {
+                return ResponseEntity.badRequest().body("❌ Invalid search type. Only 'name' is supported right now.");
+            }
+            if (organizations.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No matching organizations found abc.");
+            }
+            List<OrganizationDto > organizationDtoList = organizations.stream()
+                    .map(organization -> OrganizationDto.convertToDto(organization))
+                    .toList();
+
+            return ResponseEntity.ok(organizationDtoList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error while searching: " + e.getMessage());
         }
     }
 }

@@ -43,4 +43,13 @@ public class OrganizationController {
 
 //    @GetMapping("/{type}/{value}")
 //    @GetMapping("/{value}") // search on each column
+
+    @GetMapping("/organizations/search/{value}")
+    public ResponseEntity<?> searchOrganizations(@PathVariable String value) {
+        return organizationServiceImpl.searchOrganizations(value);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<?> searchOrganizationsType(@RequestParam String type , @RequestParam   String value) {
+        return organizationServiceImpl.searchOrganizationsType(type,value);
+    }
 }
