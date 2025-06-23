@@ -40,6 +40,5 @@ public class Organization {
     public void updateTimestamp() {
         this.updatedAt = LocalDateTime.now();
     }
-
 }
 //private String organisationId; // British English

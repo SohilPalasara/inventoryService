@@ -1,7 +1,7 @@
 package com.inventoryService.inventoryService.controller;
 
 import com.inventoryService.inventoryService.dto.OrganizationDto;
-
+import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.service.impl.OrganizationServiceImpl;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,21 +35,28 @@ public class OrganizationController {
 
         return organizationServiceImpl.deleteOrganization(organizationId);
     }
-    @PutMapping("/{organizationId}")
-    public ResponseModel updateOrganization(@PathVariable String organizationId , @RequestBody OrganizationDto organizationDto) {
 
-        return organizationServiceImpl.updateOrganization(organizationId,organizationDto);
+    @PutMapping("/{organizationId}")
+    public ResponseModel updateOrganization(@PathVariable String organizationId, @RequestBody OrganizationDto organizationDto) {
+
+        return organizationServiceImpl.updateOrganization(organizationId, organizationDto);
     }
 
-//    @GetMapping("/{type}/{value}")
-//    @GetMapping("/{value}") // search on each column
 
-    @GetMapping("/organizations/search/{value}")
-    public ResponseEntity<?> searchOrganizations(@PathVariable String value) {
+    @GetMapping("/organizations")
+    public ResponseEntity<?> searchOrganizations(@RequestParam("search") String value) {
+
         return organizationServiceImpl.searchOrganizations(value);
     }
-    @GetMapping("/search")
-    public ResponseEntity<?> searchOrganizationsType(@RequestParam String type , @RequestParam   String value) {
-        return organizationServiceImpl.searchOrganizationsType(type,value);
+
+//    @GetMapping("/search")
+//    public ResponseEntity<?> searchOrganizationsType(@RequestParam String type, @RequestParam String value) {
+//        return organizationServiceImpl.searchOrganizationsType(type, value);
+//    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> toggleStatusBasedOnInput(@PathVariable String organizationId,
+                                                      @PathVariable Status status) {
+        return organizationServiceImpl.updateOrganizationStatus(organizationId, status);
     }
 }

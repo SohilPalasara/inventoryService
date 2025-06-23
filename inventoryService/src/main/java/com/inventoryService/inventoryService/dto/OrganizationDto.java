@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,10 +22,11 @@ public class OrganizationDto {
     private String ownerName;
     private String mobileNumber;
     private String locationOrArea;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Status status;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean isDeleted;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public Organization convertToEntity() {
         return Organization.builder()
@@ -44,7 +47,9 @@ public class OrganizationDto {
                 .ownerName(organization.getOwnerName())
                 .mobileNumber(organization.getMobileNumber())
                 .locationOrArea(organization.getLocationOrArea())
-
+                .status(organization.getStatus())
+                .createdAt(organization.getCreatedAt())
+                .updatedAt(organization.getUpdatedAt())
                 .build();
     }
 

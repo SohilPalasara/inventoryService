@@ -2,6 +2,7 @@ package com.inventoryService.inventoryService.service.impl;
 
 import com.inventoryService.inventoryService.dto.OrganizationDto;
 import com.inventoryService.inventoryService.entity.Organization;
+import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.repository.OrganizationRepository;
 import com.inventoryService.inventoryService.service.OrganizationService;
 import com.inventoryService.inventoryService.utills.ResponseModel;
@@ -52,7 +53,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public ResponseEntity getAllOrganization() {
         try {
-          Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
+            Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
 
             if (organizations.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Organizations Found");
@@ -89,7 +90,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public ResponseModel deleteOrganization(String organizationId) {
         try {
-            Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId );
+            Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
             if (organization.isEmpty()) {
                 return ResponseModel.create(
                         HttpStatus.NOT_FOUND,
@@ -99,7 +100,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
 
 
-Organization organization1 = organization.get();
+            Organization organization1 = organization.get();
             organization1.setDeleted(true);
             organizationRepository.save(organization.get());
             OrganizationDto organizationDto = OrganizationDto.convertToDto(organization.get());
@@ -117,6 +118,7 @@ Organization organization1 = organization.get();
 
         }
     }
+
     public ResponseModel updateOrganization(String organizationId, OrganizationDto organizationDto) {
         try {
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
@@ -141,41 +143,16 @@ Organization organization1 = organization.get();
         }
     }
 
-    public ResponseEntity<?> searchOrganizations(String keyword) {
+    public ResponseEntity<?> searchOrganizations(String value) {
         try {
+
             Optional<List<Organization>> organizations = organizationRepository
-                    .findByIsDeletedFalseAndOrganizationNameContainingIgnoreCaseOrGstNoContainingIgnoreCaseOrMobileNumberContainingIgnoreCase(
-                            keyword, keyword, keyword
-                    );
+                    .searchByKeyword(value);
             if (organizations.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No matching organizations found.");
             }
 
-            List<OrganizationDto > organizationDtoList = organizations.get().stream()
-                    .map(organization -> OrganizationDto.convertToDto(organization))
-                    .toList();
-
-        return ResponseEntity.ok(organizationDtoList);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error while searching: " + e.getMessage());
-    }
-    }
-    public ResponseEntity<?> searchOrganizationsType(String key , String value) {
-        try {
-//            OrganizationDto organizationDto = new OrganizationDto();
-//            List<Organization> organizations=organizationRepository.findByIsDeletedFalseAndOrganizationNameContainingIgnoreCase(keyword);
-                 List<Organization> organizations;
-
-            if (key.equalsIgnoreCase("name")) {
-                organizations = organizationRepository.findByIsDeletedFalseAndOrganizationNameContainingIgnoreCase(value);
-            } else {
-                return ResponseEntity.badRequest().body("❌ Invalid search type. Only 'name' is supported right now.");
-            }
-            if (organizations.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No matching organizations found abc.");
-            }
-            List<OrganizationDto > organizationDtoList = organizations.stream()
+            List<OrganizationDto> organizationDtoList = organizations.get().stream()
                     .map(organization -> OrganizationDto.convertToDto(organization))
                     .toList();
 
@@ -185,6 +162,121 @@ Organization organization1 = organization.get();
                     .body("Error while searching: " + e.getMessage());
         }
     }
+//
+//    public ResponseEntity<?> searchOrganizationsType(String key, String value) {
+//        try {
+//            List<Organization> organizations;
+//
+//
+//                organizations = organizationRepository.findByIsDeletedFalseAndOrganizationNameContainingIgnoreCase(value);
+//
+//                organizations = organizationRepository.findByIsDeletedFalseAndGstNoContainingIgnoreCase(value);
+//
+//                organizations = organizationRepository.findByIsDeletedFalseAndMobileNumberContainingIgnoreCase(value);
+//
+//
+//            if (organizations.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No matching organizations found abc.");
+//            }
+//            List<OrganizationDto> organizationDtoList = organizations.stream()
+//                    .map(organization -> OrganizationDto.convertToDto(organization))
+//                    .toList();
+//
+//            return ResponseEntity.ok(organizationDtoList);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Error while searching: " + e.getMessage());
+//        }
+//  //  }
+
+//  public ResponseEntity<?> updateOrganizationStatus(String organizationId, Status status) {
+//    try {
+//        Optional<Organization> organizationOpt = organizationRepository
+//                .findByOrganizationIdAndIsDeletedFalse(organizationId);
+//
+//        if (organizationOpt.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
+//        }
+//
+//        Organization organization = organizationOpt.get();
+//        organization.setStatus(status);
+//
+//        organizationRepository.save(organization);
+//
+//        // Return based on new status
+//        String response = (status == Status.ACTIVE) ? "yes" : "no";
+//        return ResponseEntity.ok(response);
+//
+//    } catch (Exception e) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body("Error updating status: " + e.getMessage());
+//    }
+//}
+
+//    public ResponseEntity<?> updateOrganizationStatus(String organizationId ) {
+//        try {
+//            Optional<Organization> organization = organizationRepository
+//                    .findByOrganizationIdAndIsDeletedFalse(organizationId);
+//
+//            if (organization.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
+//            }
+//
+//            Organization organizations =organization.get();
+//            Status currentStatus = organizations.getStatus();
+//            String responseMessage;
+//
+//            if (currentStatus == Status.ACTIVE) {
+//                organizations.setStatus(Status.INACTIVE);
+//                responseMessage = "no";
+//            } else if (currentStatus == Status.INACTIVE) {
+//                organizations.setStatus(Status.ACTIVE);
+//                responseMessage = "yes";
+//            } else {
+//                return ResponseEntity.badRequest().body("Invalid current status");
+//            }
+//
+//            organizationRepository.save(organizations);
+//            return ResponseEntity.ok(responseMessage);
+//
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Error updating status: " + e.getMessage());
+//        }
+//    }
+
+    public ResponseEntity<?> updateOrganizationStatus(String organizationId, Status inputStatus) {
+        try {
+            Optional<Organization> organizationOpt = organizationRepository
+                    .findByOrganizationIdAndIsDeletedFalse(organizationId);
+
+            if (organizationOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
+            }
+
+            Organization organization = organizationOpt.get();
+
+
+            if (inputStatus == Status.ACTIVE) {
+                organization.setStatus(Status.INACTIVE);
+            } else if (inputStatus == Status.INACTIVE) {
+                organization.setStatus(Status.ACTIVE);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid status input");
+            }
+
+            organizationRepository.save(organization);
+
+            // Prepare response after saving
+            String response = (organization.getStatus() == Status.ACTIVE) ? "yes" : "no";
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating status: " + e.getMessage());
+        }
+    }
+
 }
 
 
