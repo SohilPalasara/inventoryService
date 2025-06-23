@@ -189,94 +189,43 @@ public class OrganizationServiceImpl implements OrganizationService {
 //        }
 //  //  }
 
-//  public ResponseEntity<?> updateOrganizationStatus(String organizationId, Status status) {
-//    try {
-//        Optional<Organization> organizationOpt = organizationRepository
-//                .findByOrganizationIdAndIsDeletedFalse(organizationId);
-//
-//        if (organizationOpt.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
-//        }
-//
-//        Organization organization = organizationOpt.get();
-//        organization.setStatus(status);
-//
-//        organizationRepository.save(organization);
-//
-//        // Return based on new status
-//        String response = (status == Status.ACTIVE) ? "yes" : "no";
-//        return ResponseEntity.ok(response);
-//
-//    } catch (Exception e) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body("Error updating status: " + e.getMessage());
-//    }
-//}
-
-//    public ResponseEntity<?> updateOrganizationStatus(String organizationId ) {
-//        try {
-//            Optional<Organization> organization = organizationRepository
-//                    .findByOrganizationIdAndIsDeletedFalse(organizationId);
-//
-//            if (organization.isEmpty()) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
-//            }
-//
-//            Organization organizations =organization.get();
-//            Status currentStatus = organizations.getStatus();
-//            String responseMessage;
-//
-//            if (currentStatus == Status.ACTIVE) {
-//                organizations.setStatus(Status.INACTIVE);
-//                responseMessage = "no";
-//            } else if (currentStatus == Status.INACTIVE) {
-//                organizations.setStatus(Status.ACTIVE);
-//                responseMessage = "yes";
-//            } else {
-//                return ResponseEntity.badRequest().body("Invalid current status");
-//            }
-//
-//            organizationRepository.save(organizations);
-//            return ResponseEntity.ok(responseMessage);
-//
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("Error updating status: " + e.getMessage());
-//        }
-//    }
 
     public ResponseEntity<?> updateOrganizationStatus(String organizationId, Status inputStatus) {
         try {
-            Optional<Organization> organizationOpt = organizationRepository
+            Optional<Organization> organization = organizationRepository
                     .findByOrganizationIdAndIsDeletedFalse(organizationId);
 
-            if (organizationOpt.isEmpty()) {
+            if (organization.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
             }
 
-            Organization organization = organizationOpt.get();
+            Organization organizations = organization.get();
+            Status currentStatus = organizations.getStatus();
 
+            if (currentStatus.equals(inputStatus)) {
+                return ResponseEntity.ok("Already " + inputStatus.name() + " Refresh For Update Data");
+            }
 
-            if (inputStatus == Status.ACTIVE) {
-                organization.setStatus(Status.INACTIVE);
-            } else if (inputStatus == Status.INACTIVE) {
-                organization.setStatus(Status.ACTIVE);
+            if (currentStatus.equals(Status.ACTIVE) && inputStatus.equals(Status.INACTIVE)) {
+                organizations.setStatus(Status.INACTIVE);
+            } else if (currentStatus.equals(Status.INACTIVE) && inputStatus.equals(Status.ACTIVE)) {
+                organizations.setStatus(Status.ACTIVE);
             } else {
                 return ResponseEntity.badRequest().body("Invalid status input");
             }
 
-            organizationRepository.save(organization);
+            organizationRepository.save(organizations);
+            return ResponseEntity.ok("Successfully Updated");
 
-            // Prepare response after saving
-            String response = (organization.getStatus() == Status.ACTIVE) ? "yes" : "no";
-            return ResponseEntity.ok(response);
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error updating status: " + e.getMessage());
-        }
-    }
+                    .body("Error updating status: " + ex.getMessage());
 
+        }
+
+    }
 }
+
 
 

@@ -54,9 +54,9 @@ public class OrganizationController {
 //        return organizationServiceImpl.searchOrganizationsType(type, value);
 //    }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<?> toggleStatusBasedOnInput(@PathVariable String organizationId,
-                                                      @PathVariable Status status) {
+    @PutMapping("/{organizationId}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable String organizationId, @PathVariable Status status) {
+
         return organizationServiceImpl.updateOrganizationStatus(organizationId, status);
     }
 }
