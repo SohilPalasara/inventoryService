@@ -23,8 +23,6 @@ public class OrganizationDto {
     private String mobileNumber;
     private String locationOrArea;
     private Status status;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

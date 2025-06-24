@@ -20,6 +20,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    @Override
     public ResponseModel registerOrganization(OrganizationDto organizationDto) {
         try {
             Optional<Organization> exist = organizationRepository.findByIsDeletedAndGstNoOrMobileNumber(
@@ -31,7 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 return ResponseModel.create(
                         HttpStatus.FOUND,
                         null,
-                        "Organization already exists with this GST number or mobile number or ownerName"
+                        "Organization already exists with this GST number or mobile number"
                 );
             }
             Organization organization = organizationDto.convertToEntity();
@@ -50,7 +51,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
-
+    @Override
     public ResponseEntity getAllOrganization() {
         try {
             Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
@@ -71,6 +72,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
+    @Override
     public ResponseEntity<?> getByOrganization(String organizationId) {
         try {
             Optional<Organization> organizations = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
@@ -88,6 +90,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
+    @Override
     public ResponseModel deleteOrganization(String organizationId) {
         try {
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
@@ -119,6 +122,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
+    @Override
     public ResponseModel updateOrganization(String organizationId, OrganizationDto organizationDto) {
         try {
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
@@ -143,6 +147,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
+    @Override
     public ResponseEntity<?> searchOrganizations(String value) {
         try {
 
@@ -190,6 +195,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 //  //  }
 
 
+    @Override
     public ResponseEntity<?> updateOrganizationStatus(String organizationId, Status inputStatus) {
         try {
             Optional<Organization> organization = organizationRepository

@@ -35,10 +35,8 @@ public class Organization {
     public void setValue() {
         this.organizationId = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
-    }
-    @PreUpdate
-    public void updateTimestamp() {
         this.updatedAt = LocalDateTime.now();
     }
+
 }
 //private String organisationId; // British English
