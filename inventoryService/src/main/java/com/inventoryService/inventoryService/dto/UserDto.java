@@ -25,14 +25,17 @@ public class UserDto {
     private String profilePicture;
     private Department department;
     private Status status;
+    private  String organizationId;
     private Role role;
     private Gender gender;
-    private Organization organization;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
 
     public User convertToEntity() {
+        Organization org = Organization.builder()
+                .organizationId(this.organizationId)
+                .build();
         return User.builder()
                 .fullName(this.fullName)
                 .mobileNumber(this.mobileNumber)
@@ -43,7 +46,7 @@ public class UserDto {
                 .status(Status.ACTIVE)
                 .role(this.role)
                 .gender(this.gender)
-                .organization(this.organization)
+                .organization(org)
                 .build();
     }
     public static UserDto convertToDto(User user) {
@@ -59,7 +62,7 @@ public class UserDto {
                 .status(user.getStatus())
                 .role(user.getRole())
                 .gender(user.getGender())
-                .organization(user.getOrganization())
+                .organizationId(user.getOrganization().getOrganizationId())
                 .build();
     }
 }

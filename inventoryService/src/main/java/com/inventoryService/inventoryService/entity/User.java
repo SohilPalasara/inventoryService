@@ -35,6 +35,7 @@ public class User {
 
     //optional
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
     private Department department;
     //optional
     private String profilePicture;
