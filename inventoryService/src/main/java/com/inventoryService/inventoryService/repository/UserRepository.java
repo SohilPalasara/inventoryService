@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository< User , String> {
     Optional<User> findByIsDeletedAndMobileNumber(boolean isDeleted, String mobileNumber);
 
     Optional<List<User>> findByIsDeletedFalse();
+
+    Optional<User> findByUserIdAndIsDeletedFalse(String userId);
 }

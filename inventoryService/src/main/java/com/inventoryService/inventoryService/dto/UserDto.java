@@ -50,19 +50,62 @@ public class UserDto {
                 .build();
     }
     public static UserDto convertToDto(User user) {
-        return UserDto.builder()
-                .fullName(user.getFullName())
-                .mobileNumber(user.getMobileNumber())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .profilePicture(user.getProfilePicture())
-                .department(user.getDepartment())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .status(user.getStatus())
-                .role(user.getRole())
-                .gender(user.getGender())
-                .organizationId(user.getOrganization().getOrganizationId())
-                .build();
+        try {
+            return
+
+                    UserDto.builder()
+                            .fullName(user.getFullName())
+                            .mobileNumber(user.getMobileNumber())
+                            .password(user.getPassword())
+                            .email(user.getEmail())
+                            .profilePicture(user.getProfilePicture())
+                            .department(user.getDepartment())
+                            .createdAt(user.getCreatedAt())
+                            .updatedAt(user.getUpdatedAt())
+                            .status(user.getStatus())
+                            .role(user.getRole())
+                            .gender(user.getGender())
+                            .organizationId(
+                                    user.getOrganization() != null ? user.getOrganization().getOrganizationId() : null
+                            )
+                            .build();
+        } catch (Exception e) {
+            e.printStackTrace(); // ✅ This will show the REAL issue in your console
+            throw e; // rethrow for response
+
+        }
+    }
+
+
+    public void updateEntity(User user) {
+        if (this.fullName!= null) {
+            user.setFullName(this.fullName);
+        }
+        if (this.mobileNumber!= null) {
+           user.setMobileNumber(this.mobileNumber);
+        }
+        if (this.password != null) {
+            user.setPassword(this.password);
+        }
+        if (this.email != null) {
+            user.setEmail(this.email);
+        }
+        if (this.profilePicture!= null) {
+            user.setProfilePicture(this.profilePicture);
+        }
+        if (this.department!= null) {
+            user.setDepartment(this.department);
+        }
+        if (this.status != null) {
+            user.setStatus(Status.ACTIVE);
+        }
+        if (this.role!= null) {
+            user.setRole(this.role);
+        }
+        if (this.gender != null) {
+            user.setGender(this.gender);
+        }
+
+
     }
 }

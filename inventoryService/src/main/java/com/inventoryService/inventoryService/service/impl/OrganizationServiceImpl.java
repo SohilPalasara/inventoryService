@@ -103,13 +103,12 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
 
 
-            Organization organization1 = organization.get();
-            organization1.setDeleted(true);
-            organizationRepository.save(organization.get());
-            OrganizationDto organizationDto = OrganizationDto.convertToDto(organization.get());
+            Organization organizations = organization.get();
+            organizations.setDeleted(true);
+            organizationRepository.save(organizations);
             return ResponseModel.create(
                     HttpStatus.OK,
-                    organizationDto,
+                    OrganizationDto.convertToDto(organizations),
                     "Organization deleted successfully"
             );
         } catch (Exception e) {

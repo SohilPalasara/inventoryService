@@ -1,5 +1,6 @@
 package com.inventoryService.inventoryService.controller;
 
+import com.inventoryService.inventoryService.dto.OrganizationDto;
 import com.inventoryService.inventoryService.dto.UserDto;
 import com.inventoryService.inventoryService.service.impl.UserServiceImpl;
 import com.inventoryService.inventoryService.utills.ResponseModel;
@@ -23,5 +24,19 @@ public class UserController {
         return userServiceimpl.getAllUser();
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getOrganizationById(@PathVariable String userId) {
+        return userServiceimpl.getByUser(userId);
+    }
+    @DeleteMapping("/{organizationId}")
+    public ResponseModel deleteOrganization(@PathVariable String organizationId) {
 
+        return userServiceimpl.deleteUser(organizationId);
+    }
+
+    @PutMapping("/{organizationId}")
+    public ResponseModel updateOrganization(@PathVariable String userId, @RequestBody UserDto userDto) {
+
+        return userServiceimpl.updateUser(userId,userDto);
+    }
 }
