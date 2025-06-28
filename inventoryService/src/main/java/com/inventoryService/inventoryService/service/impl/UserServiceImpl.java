@@ -1,8 +1,10 @@
 package com.inventoryService.inventoryService.service.impl;
 
 import com.inventoryService.inventoryService.dto.UserDto;
+import com.inventoryService.inventoryService.entity.Organization;
 import com.inventoryService.inventoryService.entity.User;
 import com.inventoryService.inventoryService.enums.Status;
+import com.inventoryService.inventoryService.repository.OrganizationRepository;
 import com.inventoryService.inventoryService.repository.UserRepository;
 import com.inventoryService.inventoryService.service.UserService;
 import com.inventoryService.inventoryService.utills.ResponseModel;
@@ -19,6 +21,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Override
     public ResponseModel registerOrganization(UserDto userDto) {
@@ -36,8 +40,9 @@ public class UserServiceImpl implements UserService {
                         "User already exists with  mobile number "
                 );
             }
+            Optional<Organization> optionalOrg = organizationRepository.findByOrganizationIdAndIsDeletedFalse(userDto.getOrganizationId())
 
-            User user = userDto.convertToEntity();
+            User user = userDto.convertToEntity(optionalOrg.get());
             userRepository.save(user);
             return ResponseModel.create(
                     HttpStatus.OK,

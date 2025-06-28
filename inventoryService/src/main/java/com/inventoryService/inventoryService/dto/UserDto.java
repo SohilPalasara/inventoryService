@@ -32,10 +32,9 @@ public class UserDto {
     private LocalDateTime updatedAt;
 
 
-    public User convertToEntity() {
-        Organization org = Organization.builder()
-                .organizationId(this.organizationId)
-                .build();
+    public User convertToEntity(Organization organization) {
+
+
         return User.builder()
                 .fullName(this.fullName)
                 .mobileNumber(this.mobileNumber)
@@ -46,7 +45,7 @@ public class UserDto {
                 .status(Status.ACTIVE)
                 .role(this.role)
                 .gender(this.gender)
-                .organization(org)
+                .organization(organization)
                 .build();
     }
     public static UserDto convertToDto(User user) {
