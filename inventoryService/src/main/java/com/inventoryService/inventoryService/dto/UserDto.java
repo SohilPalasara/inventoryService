@@ -50,13 +50,13 @@ public class UserDto {
                 .build();
     }
     public static UserDto convertToDto(User user) {
-        try {
+
             return
 
                     UserDto.builder()
                             .fullName(user.getFullName())
                             .mobileNumber(user.getMobileNumber())
-                            .password(user.getPassword())
+                            .password(null)
                             .email(user.getEmail())
                             .profilePicture(user.getProfilePicture())
                             .department(user.getDepartment())
@@ -69,12 +69,8 @@ public class UserDto {
                                     user.getOrganization() != null ? user.getOrganization().getOrganizationId() : null
                             )
                             .build();
-        } catch (Exception e) {
-            e.printStackTrace(); // ✅ This will show the REAL issue in your console
-            throw e; // rethrow for response
-
         }
-    }
+
 
 
     public void updateEntity(User user) {

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity getAllUser() {
+    public ResponseEntity<?> getAllUser() {
         try {
             Optional<List<User>> users = userRepository.findByIsDeletedFalse();
 
@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
 
         }
 
-        return ResponseModel.create(HttpStatus.NOT_FOUND, null, "password not found");
+        return ResponseModel.create(HttpStatus.NOT_FOUND, null, "!  incorrect password");
 
     }
 
