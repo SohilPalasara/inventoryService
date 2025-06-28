@@ -2,6 +2,7 @@ package com.inventoryService.inventoryService.controller;
 
 import com.inventoryService.inventoryService.dto.OrganizationDto;
 import com.inventoryService.inventoryService.dto.UserDto;
+import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.service.impl.UserServiceImpl;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,38 @@ public class UserController {
     public ResponseEntity<?> getOrganizationById(@PathVariable String userId) {
         return userServiceimpl.getByUser(userId);
     }
-    @DeleteMapping("/{organizationId}")
-    public ResponseModel deleteOrganization(@PathVariable String organizationId) {
+    @DeleteMapping("/{userId}")
+    public ResponseModel deleteOrganization(@PathVariable String userId) {
 
-        return userServiceimpl.deleteUser(organizationId);
+        return userServiceimpl.deleteUser(userId);
     }
 
-    @PutMapping("/{organizationId}")
-    public ResponseModel updateOrganization(@PathVariable String userId, @RequestBody UserDto userDto) {
+    @PutMapping("/{userId}")
+    public ResponseModel updateUser(@PathVariable String userId, @RequestBody UserDto userDto) {
 
         return userServiceimpl.updateUser(userId,userDto);
+    }
+    @GetMapping("/user")
+    public ResponseEntity<?> searchOrganizations(@RequestParam("search") String value) {
+
+        return userServiceimpl.searchUser(value);
+    }
+    @PutMapping("/{userId}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable String userId, @PathVariable Status status) {
+
+        return userServiceimpl.updateUserStatus(userId, status);
+    }
+
+    @PostMapping("/login")
+    public ResponseModel login(@RequestParam("mobileNumber") String mobileNumber,
+                                               @RequestParam("password") String password) {
+        return userServiceimpl.login(mobileNumber,password);
+    }
+    @PutMapping("/{userId}/{oldPassword}/{newPassword}")
+    public ResponseModel changePassword(
+            @PathVariable String userId,
+            @PathVariable String oldPassword,
+            @PathVariable String newPassword) {
+        return userServiceimpl.changePassword(userId,oldPassword,newPassword);
     }
 }
