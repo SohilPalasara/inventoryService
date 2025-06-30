@@ -34,7 +34,6 @@ public class UserDto {
 
     public User convertToEntity(Organization organization) {
 
-
         return User.builder()
                 .fullName(this.fullName)
                 .mobileNumber(this.mobileNumber)

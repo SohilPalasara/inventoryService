@@ -42,6 +42,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+    private String otp;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @ManyToOne

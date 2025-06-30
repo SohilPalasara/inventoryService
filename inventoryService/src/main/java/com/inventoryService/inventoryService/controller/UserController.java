@@ -17,7 +17,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseModel saveUser(@RequestBody UserDto userDto) {
-        return userServiceimpl.registerOrganization(userDto);
+        return userServiceimpl.registerUser(userDto);
     }
 
     @GetMapping
@@ -63,4 +63,17 @@ public class UserController {
             @PathVariable String newPassword) {
         return userServiceimpl.changePassword(userId,oldPassword,newPassword);
     }
+
+    @GetMapping("/verify/mobile")
+    public ResponseModel verifyMobileNumber(@RequestParam("varify") String mobileNumber) {
+        return userServiceimpl.verifyMobileNumberForPasswordReset(mobileNumber);
+    }
+    @PostMapping("/send-otp/{mobileNumber}")
+    public ResponseModel sendOtp(@PathVariable String mobileNumber) {
+        return userServiceimpl.sendOtpForPasswordReset(mobileNumber);
+    }
+
+
+
+
 }

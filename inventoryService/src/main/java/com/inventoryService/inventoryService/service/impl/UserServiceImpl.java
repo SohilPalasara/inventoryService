@@ -6,6 +6,7 @@ import com.inventoryService.inventoryService.entity.User;
 import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.repository.OrganizationRepository;
 import com.inventoryService.inventoryService.repository.UserRepository;
+
 import com.inventoryService.inventoryService.service.UserService;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private OrganizationRepository organizationRepository;
 
     @Override
-    public ResponseModel registerOrganization(UserDto userDto) {
+    public ResponseModel registerUser(UserDto userDto) {
 
         try {
             Optional<User> exist = userRepository.findByIsDeletedAndMobileNumber(
@@ -40,9 +41,15 @@ public class UserServiceImpl implements UserService {
                         "User already exists with  mobile number "
                 );
             }
-            Optional<Organization> optionalOrg = organizationRepository.findByOrganizationIdAndIsDeletedFalse(userDto.getOrganizationId())
-
-            User user = userDto.convertToEntity(optionalOrg.get());
+            Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(userDto.getOrganizationId());
+            if (organization.isEmpty()) {
+                return ResponseModel.create(
+                        HttpStatus.NOT_FOUND,
+                        null,
+                        "Organization not found"
+                );
+            }
+            User user = userDto.convertToEntity(organization.get());
             userRepository.save(user);
             return ResponseModel.create(
                     HttpStatus.OK,
@@ -233,6 +240,8 @@ public class UserServiceImpl implements UserService {
         }
         User user = users.get();
         if (user.getPassword().equals(oldPassword)) {
+
+            //match thay to  apde varification mate otp moklyu
             user.setPassword(newPassword);
             userRepository.save(user);
             return ResponseModel.create(HttpStatus.OK, null, "Password changed successfully");
@@ -242,6 +251,59 @@ public class UserServiceImpl implements UserService {
         return ResponseModel.create(HttpStatus.NOT_FOUND, null, "!  incorrect password");
 
     }
+
+    public ResponseModel verifyMobileNumberForPasswordReset(String mobileNumber) {
+        try {
+            Optional<User> optionalUser = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
+
+            if (optionalUser.isEmpty()) {
+                return ResponseModel.create(
+                        HttpStatus.NOT_FOUND,
+                        null,
+                        "No user found with the provided mobile number."
+                );
+            }
+
+            return ResponseModel.create(
+                    HttpStatus.OK,
+                    null,
+                    "Mobile number verified successfully. Proceed to OTP verification."
+            );
+
+        } catch (Exception e) {
+            return ResponseModel.create(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    null,
+                    "An unexpected error occurred while verifying the mobile number: " + e.getMessage()
+            );
+        }
+    }
+
+    public ResponseModel sendOtpForPasswordReset(String mobileNumber) {
+        try {
+            Optional<User> optionalUser = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
+
+            if (optionalUser.isEmpty()) {
+                return ResponseModel.create(HttpStatus.NOT_FOUND, null, "Mobile number not found");
+            }
+
+            User user = optionalUser.get();
+            String otp = String.valueOf((int) (Math.random() * 900000) + 100000);
+            user.setOtp(otp);
+            user.setStatus(Status.UNVERIFIED);
+            userRepository.save(user);
+
+            System.out.println("OTP sent to: " + mobileNumber + " => OTP: " + otp);
+
+            return ResponseModel.create(HttpStatus.OK, null, "OTP sent successfully");
+
+        } catch (Exception e) {
+            return ResponseModel.create(HttpStatus.INTERNAL_SERVER_ERROR, null, "Error: " + e.getMessage());
+        }
+    }
+
+
+
 
 }
 
