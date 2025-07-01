@@ -256,9 +256,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseModel verifyMobileNumberForPasswordReset(String mobileNumber) {
         try {
+
             Optional<User> optionalUser = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
 
             if (optionalUser.isEmpty()) {
+
                 return ResponseModel.create(
                         HttpStatus.NOT_FOUND,
                         null,

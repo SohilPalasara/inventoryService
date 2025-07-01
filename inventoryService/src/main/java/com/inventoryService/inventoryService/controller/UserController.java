@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @GetMapping("/verify/mobile")
-    public ResponseModel verifyMobileNumber(@RequestParam("varify") String mobileNumber) {
+    public ResponseModel verifyMobileNumber(@RequestParam("verify") String mobileNumber) {
         return userServiceimpl.verifyMobileNumberForPasswordReset(mobileNumber);
     }
     @PostMapping("/send-otp/{mobileNumber}")
