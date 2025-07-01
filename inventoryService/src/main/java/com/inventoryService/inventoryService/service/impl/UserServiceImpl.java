@@ -232,6 +232,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public ResponseModel changePassword(String userId, String oldPassword, String newPassword) {
         Optional<User> users = userRepository.findByUserIdAndIsDeletedFalse(userId);
 
@@ -252,6 +253,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public ResponseModel verifyMobileNumberForPasswordReset(String mobileNumber) {
         try {
             Optional<User> optionalUser = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
@@ -279,6 +281,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public ResponseModel sendOtpForPasswordReset(String mobileNumber) {
         try {
             Optional<User> optionalUser = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
@@ -288,21 +291,50 @@ public class UserServiceImpl implements UserService {
             }
 
             User user = optionalUser.get();
-            String otp = String.valueOf((int) (Math.random() * 900000) + 100000);
+            String otp = String.valueOf((int) (Math.random() * 9000) + 1000);
             user.setOtp(otp);
             user.setStatus(Status.UNVERIFIED);
             userRepository.save(user);
 
             System.out.println("OTP sent to: " + mobileNumber + " => OTP: " + otp);
 
-            return ResponseModel.create(HttpStatus.OK, null, "OTP sent successfully");
+            return ResponseModel.create(HttpStatus.OK, otp, "OTP sent successfully");
 
         } catch (Exception e) {
             return ResponseModel.create(HttpStatus.INTERNAL_SERVER_ERROR, null, "Error: " + e.getMessage());
         }
     }
 
+    @Override
+    public ResponseModel resetPasswordUsingOtp(String mobileNumber , String otp ,String newPassword ,String confirmPassword) {
+        try {
+            Optional<User> users = userRepository.findByIsDeletedAndMobileNumber(false, mobileNumber);
 
+            if (users.isEmpty()) {
+                return ResponseModel.create(HttpStatus.NOT_FOUND, null, "Mobile number not found");
+            }
+
+            User user = users.get();
+
+            if (user.getOtp() == null || !user.getOtp().equals(otp)) {
+                return ResponseModel.create(HttpStatus.BAD_REQUEST, null, "Invalid or expired OTP");
+            }
+
+            if (!newPassword.equals(confirmPassword) ){
+                return ResponseModel.create(HttpStatus.BAD_REQUEST, null, "New password and confirm password do not match");
+            }
+
+            user.setPassword(confirmPassword);
+            user.setOtp(otp);
+            user.setStatus(Status.ACTIVE);
+            userRepository.save(user);
+
+            return ResponseModel.create(HttpStatus.OK, null, "Password reset successfully");
+
+        } catch (Exception e) {
+            return ResponseModel.create(HttpStatus.INTERNAL_SERVER_ERROR, null, "Error: " + e.getMessage());
+        }
+    }
 
 
 }

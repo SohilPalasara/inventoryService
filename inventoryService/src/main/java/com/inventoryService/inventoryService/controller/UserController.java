@@ -72,6 +72,15 @@ public class UserController {
     public ResponseModel sendOtp(@PathVariable String mobileNumber) {
         return userServiceimpl.sendOtpForPasswordReset(mobileNumber);
     }
+    @PostMapping("/reset-password")
+    public ResponseModel resetPassword(
+            @RequestParam("mobileNumber") String mobileNumber,
+            @RequestParam("otp") String otp,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword) {
+
+        return userServiceimpl.resetPasswordUsingOtp(mobileNumber, otp, newPassword, confirmPassword);
+    }
 
 
 
