@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
                     .findByUserIdAndIsDeletedFalse(userId);
 
             if (user.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organization not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
             }
 
             User users = user.get();

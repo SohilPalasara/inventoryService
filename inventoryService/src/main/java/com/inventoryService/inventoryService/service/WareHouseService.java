@@ -1,6 +1,7 @@
 package com.inventoryService.inventoryService.service;
 
 import com.inventoryService.inventoryService.dto.WareHouseDto;
+import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.http.ResponseEntity;
 
@@ -10,5 +11,7 @@ public interface WareHouseService {
     public ResponseEntity<?> getByWareHouse(String wareHouseId);
     public ResponseModel deleteWareHouse(String wareHouseId);
     public ResponseModel updateWareHouse(String wareHouseId, WareHouseDto wareHouseDto);
+    public ResponseEntity<?> searchWareHouse(String value);
+    public ResponseEntity<?> updateWareHouseStatus(String WareHouseId, Status inputStatus);
 
 }
