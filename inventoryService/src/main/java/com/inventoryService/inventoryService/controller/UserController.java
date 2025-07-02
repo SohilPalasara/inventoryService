@@ -26,11 +26,11 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getOrganizationById(@PathVariable String userId) {
+    public ResponseEntity<?> getUserById(@PathVariable String userId) {
         return userServiceimpl.getByUser(userId);
     }
     @DeleteMapping("/{userId}")
-    public ResponseModel deleteOrganization(@PathVariable String userId) {
+    public ResponseModel deleteUser(@PathVariable String userId) {
 
         return userServiceimpl.deleteUser(userId);
     }
@@ -41,7 +41,7 @@ public class UserController {
         return userServiceimpl.updateUser(userId,userDto);
     }
     @GetMapping("/user")
-    public ResponseEntity<?> searchOrganizations(@RequestParam("search") String value) {
+    public ResponseEntity<?> searchUser(@RequestParam("search") String value) {
 
         return userServiceimpl.searchUser(value);
     }
