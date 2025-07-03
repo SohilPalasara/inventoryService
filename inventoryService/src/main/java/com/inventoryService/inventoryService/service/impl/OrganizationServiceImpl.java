@@ -52,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public ResponseEntity getAllOrganization() {
+    public ResponseEntity<?> getAllOrganization() {
         try {
             Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
 

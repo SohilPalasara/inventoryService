@@ -10,8 +10,10 @@ import com.inventoryService.inventoryService.service.CategoryService;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,4 +80,25 @@ public class CategoryServiceImpl implements CategoryService {
             );
         }
     }
+    @Override
+    public ResponseEntity<?> getAllCategory() {
+        try {
+            Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
+
+            if (organizations.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Organizations Found");
+            }
+
+            List<OrganizationDto> organizationDtoList = organizations.get().stream()
+                    .map(OrganizationDto::convertToDto)
+                    .toList();
+
+            return ResponseEntity.ok(organizationDtoList);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
+    }
+
 }
