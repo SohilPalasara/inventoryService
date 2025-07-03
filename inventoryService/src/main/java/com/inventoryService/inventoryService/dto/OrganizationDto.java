@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrganizationDto {
 
+    private String organizationId;
     private String organizationName;
     private String gstNo;
     private String ownerName;
@@ -40,6 +41,7 @@ public class OrganizationDto {
     public static OrganizationDto convertToDto(Organization organization) {
 
         return OrganizationDto.builder()
+                .organizationId(organization.getOrganizationId())
                 .organizationName(organization.getOrganizationName())
                 .gstNo(organization.getGstNo())
                 .ownerName(organization.getOwnerName())
