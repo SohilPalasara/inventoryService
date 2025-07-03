@@ -28,6 +28,7 @@ public class Category {
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
+    @Column(nullable = true)
     private Category parentCategory;
     @ManyToOne
     private Organization organization;

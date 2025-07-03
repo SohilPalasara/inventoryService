@@ -29,7 +29,6 @@ public class CategoryDto {
         return Category.builder()
                 .categoryName(this.categoryName)
                 .description(this.description)
-                .isDeleted(this.isDeleted())
                 .status(Status.ACTIVE)
                 .parentCategory(parentCategory)
                 .organization(organization)
@@ -44,10 +43,11 @@ public class CategoryDto {
                .status(category.getStatus())
                .createdAt(category.getCreatedAt())
                .updatedAt(category.getUpdatedAt())
-               .organizationId(category.getOrganization().getOrganizationId())
-               .parentCategoryId(category.getParentCategory().getId())
+               .organizationId(category.getOrganization() != null ? category.getOrganization().getOrganizationId() : null)
+               .parentCategoryId(category.getParentCategory() != null ? category.getParentCategory().getId() : null)
 
-                .build();
+
+               .build();
     }
 
 
