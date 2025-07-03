@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class UserDto {
+    private String userId;
     private String fullName;
     private String mobileNumber;
     private String password;
@@ -52,6 +53,7 @@ public class UserDto {
             return
 
                     UserDto.builder()
+                            .userId(user.getUserId())
                             .fullName(user.getFullName())
                             .mobileNumber(user.getMobileNumber())
                             .password(null)
