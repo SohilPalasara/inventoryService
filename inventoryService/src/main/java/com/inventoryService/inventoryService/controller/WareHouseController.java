@@ -40,7 +40,7 @@ public class WareHouseController {
 
         return wareHouseServiceimpl.updateWareHouse(wareHouseId,wareHouseDto);
     }
-    @GetMapping("/user")
+    @GetMapping("/wareHouse")
     public ResponseEntity<?> searchWareHouse(@RequestParam("search") String value) {
 
         return wareHouseServiceimpl.searchWareHouse(value);

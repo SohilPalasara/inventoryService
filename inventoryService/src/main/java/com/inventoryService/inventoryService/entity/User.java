@@ -27,7 +27,9 @@ public class User {
     private  String  mobileNumber;
     @Column(nullable = false)
     private  String  password;
+    @Enumerated(EnumType.STRING)
     private Role role;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private  boolean isDeleted;
     //optional
