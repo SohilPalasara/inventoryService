@@ -33,6 +33,7 @@ public class User {
     private Gender gender;
     private  boolean isDeleted;
     //optional
+    @Column(unique = true)
     private String  email;
 
     //optional

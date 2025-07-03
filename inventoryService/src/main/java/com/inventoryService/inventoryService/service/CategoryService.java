@@ -4,5 +4,5 @@ import com.inventoryService.inventoryService.dto.CategoryDto;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 
 public interface CategoryService {
-    public ResponseModel registerCategory(CategoryDto categoryDto);
+    public ResponseModel addCategory(CategoryDto categoryDto);
 }

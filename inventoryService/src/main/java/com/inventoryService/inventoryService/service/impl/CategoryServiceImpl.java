@@ -21,20 +21,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private OrganizationRepository organizationRepository;
     @Override
-    public ResponseModel registerCategory(CategoryDto categoryDto) {
+    public ResponseModel addCategory(CategoryDto categoryDto) {
         try {
-//            Optional<Organization> exist =categoryRepository.findByIsDeletedAndGstNoOrMobileNumber(
-//                    false,
-//                    organizationDto.getGstNo(),
-//                    organizationDto.getMobileNumber()
-//            );
-//            if (exist.isPresent()) {
-//                return ResponseModel.create(
-//                        HttpStatus.FOUND,
-//                        null,
-//                        "Organization already exists with this GST number or mobile number"
-//                );
-//            }
+            Optional<Organization> exist =categoryRepository.findByIsDeletedAndCategoryName(
+                    false,
+                    categoryDto.getCategoryName()
+            );
+            if (exist.isPresent()) {
+                return ResponseModel.create(
+                        HttpStatus.FOUND,
+                        null,
+                        "Category already exists with this Category name"
+                );
+            }
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(categoryDto.getOrganizationId());
             if (organization.isEmpty()) {
                 return ResponseModel.create(
@@ -43,6 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
                         "Organization not found"
                 );
             }
+
             if(categoryDto.getParentCategoryId()!=null){
             Optional<Category> optionalCategory = categoryRepository.findByIdAndIsDeletedFalse(categoryDto.getParentCategoryId());
             if (optionalCategory.isEmpty()) {

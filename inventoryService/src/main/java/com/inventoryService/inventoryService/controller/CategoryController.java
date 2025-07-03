@@ -16,8 +16,8 @@ public class CategoryController {
 
     @Autowired
     private CategoryServiceImpl categoryServiceImpl;
-    @PostMapping("/register")
-    public ResponseModel registerCategory(@RequestBody CategoryDto categoryDto) {
-        return categoryServiceImpl.registerCategory(categoryDto);
+    @PostMapping
+    public ResponseModel addCategory(@RequestBody CategoryDto categoryDto) {
+        return categoryServiceImpl.addCategory(categoryDto);
     }
 }
