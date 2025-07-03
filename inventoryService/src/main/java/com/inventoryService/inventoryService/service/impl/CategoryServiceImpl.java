@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseModel addCategory(CategoryDto categoryDto) {
         try {
-            Optional<Organization> exist =categoryRepository.findByIsDeletedAndCategoryName(
+            Optional<Category> exist = categoryRepository.findByIsDeletedAndCategoryName(
                     false,
                     categoryDto.getCategoryName()
             );

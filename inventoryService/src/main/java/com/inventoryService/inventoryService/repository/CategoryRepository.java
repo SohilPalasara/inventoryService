@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category , String> {
     Optional<Category> findByIdAndIsDeletedFalse(String organizationId);
 
-    Optional<Organization> findByIsDeletedAndCategoryName(boolean b, String categoryName);
+    Optional<Category> findByIsDeletedAndCategoryName(boolean b, String categoryName);
 
 
     Optional<List<Category>> findByIsDeletedFalse();
