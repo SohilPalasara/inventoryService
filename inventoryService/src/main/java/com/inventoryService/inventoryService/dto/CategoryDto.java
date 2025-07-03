@@ -39,7 +39,6 @@ public class CategoryDto {
                .id(category.getId())
                .categoryName(category.getCategoryName())
                .description(category.getDescription())
-               .isDeleted(category.isDeleted())
                .status(category.getStatus())
                .createdAt(category.getCreatedAt())
                .updatedAt(category.getUpdatedAt())

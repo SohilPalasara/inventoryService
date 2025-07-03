@@ -7,4 +7,6 @@ import org.springframework.http.ResponseEntity;
 public interface CategoryService {
     public ResponseModel addCategory(CategoryDto categoryDto);
     public ResponseEntity<?> getAllCategory();
+    public ResponseEntity<?> getByCategory(String Id);
+    public ResponseModel deleteCategory(String Id);
 }

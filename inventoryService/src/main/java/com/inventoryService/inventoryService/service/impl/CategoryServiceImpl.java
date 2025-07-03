@@ -41,36 +41,34 @@ public class CategoryServiceImpl implements CategoryService {
                 return ResponseModel.create(
                         HttpStatus.NOT_FOUND,
                         null,
-                        "Organization not found"
+                        "Category not found"
                 );
             }
+            Category category;
 
             if(categoryDto.getParentCategoryId()!=null){
-            Optional<Category> optionalCategory = categoryRepository.findByIdAndIsDeletedFalse(categoryDto.getParentCategoryId());
-            if (optionalCategory.isEmpty()) {
+            Optional<Category> parentCategory = categoryRepository.findByIdAndIsDeletedFalse(categoryDto.getParentCategoryId());
+            if (parentCategory.isEmpty()) {
                 return ResponseModel.create(
                         HttpStatus.NOT_FOUND,
                         null,
-                        "category not found"
+                        "Parent Category not found"
                 );
             }
-                Category category = categoryDto.convertToEntity(optionalCategory.get(),organization.get());
-                categoryRepository.save(category);
-                return ResponseModel.create(
-                        HttpStatus.OK,
-                        CategoryDto.convertToDto(category),
-                        "Organization saved successfully"
-                );
+
+               category  = categoryDto.convertToEntity(parentCategory.get(),organization.get());
+
 }
             else {
-                Category category = categoryDto.convertToEntity(null, organization.get());
-                categoryRepository.save(category);
-                return ResponseModel.create(
-                        HttpStatus.OK,
-                        CategoryDto.convertToDto(category),
-                        "Root category saved successfully"
-                );
+                category = categoryDto.convertToEntity(null, organization.get());
+
             }
+            categoryRepository.save(category);
+            return ResponseModel.create(
+                    HttpStatus.OK,
+                    CategoryDto.convertToDto(category),
+                    "Category saved successfully"
+            );
 
         } catch (Exception e) {
 
@@ -83,21 +81,70 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> getAllCategory() {
         try {
-            Optional<List<Organization>> organizations = organizationRepository.findByIsDeletedFalse();
+            Optional<List<Category>> categories = categoryRepository.findByIsDeletedFalse();
 
-            if (organizations.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Organizations Found");
+            if (categories.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Category Found");
             }
 
-            List<OrganizationDto> organizationDtoList = organizations.get().stream()
-                    .map(OrganizationDto::convertToDto)
+            List<CategoryDto> categoryDtoList = categories.get().stream()
+                    .map(category -> CategoryDto.convertToDto(category))
                     .toList();
 
-            return ResponseEntity.ok(organizationDtoList);
+            return ResponseEntity.ok(categoryDtoList);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getByCategory(String Id) {
+        try {
+            Optional<Category> categoryOptional = categoryRepository.findByIdAndIsDeletedFalse(Id);
+
+            if (categoryOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No categoryId found");
+            }
+
+            CategoryDto categoryDto = CategoryDto.convertToDto(categoryOptional.get());
+
+            return ResponseEntity.ok(categoryDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseModel deleteCategory(String Id) {
+        try {
+            Optional<Category> optionalCategory = categoryRepository.findByIdAndIsDeletedFalse(Id);
+            if (optionalCategory.isEmpty()) {
+                return ResponseModel.create(
+                        HttpStatus.NOT_FOUND,
+                        null,
+                        "category not found  or deleted"
+                );
+            }
+
+
+            Category category = optionalCategory.get();
+            category.setDeleted(true);
+            categoryRepository.save(category);
+            return ResponseModel.create(
+                    HttpStatus.OK,
+                    CategoryDto.convertToDto(category),
+                    "Category deleted successfully"
+            );
+        } catch (Exception e) {
+            return ResponseModel.create(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    null,
+                    "An error occurred while deleting: " + e.getMessage()
+            );
+
         }
     }
 

@@ -1,5 +1,6 @@
 package com.inventoryService.inventoryService.repository;
 
+import com.inventoryService.inventoryService.entity.Category;
 import com.inventoryService.inventoryService.entity.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +24,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Stri
     @Query("SELECT o FROM Organization o WHERE o.isDeleted = false AND " +
             "(o.organizationName LIKE %:value% OR o.gstNo LIKE %:value% OR o.mobileNumber LIKE %:value%)")
     Optional<List<Organization>> searchByKeyword(@Param("value") String value);
+
 
 }
