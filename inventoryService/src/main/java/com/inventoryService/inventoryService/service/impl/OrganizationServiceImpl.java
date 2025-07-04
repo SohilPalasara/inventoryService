@@ -127,7 +127,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             Optional<Organization> organization = organizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
 
             if (organization.isEmpty()) {
-                return ResponseModel.create(HttpStatus.NOT_FOUND, null, "Organization not found or deleted");
+                return ResponseModel.create(HttpStatus.NOT_FOUND, null, "Organization not found ");
             }
 
 

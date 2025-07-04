@@ -2,6 +2,7 @@ package com.inventoryService.inventoryService.controller;
 
 import com.inventoryService.inventoryService.dto.CategoryDto;
 import com.inventoryService.inventoryService.dto.OrganizationDto;
+import com.inventoryService.inventoryService.enums.Status;
 import com.inventoryService.inventoryService.service.impl.CategoryServiceImpl;
 import com.inventoryService.inventoryService.utills.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,29 @@ public class CategoryController {
         return categoryServiceImpl.getAllCategory();
     }
 
-    @GetMapping("/{Id}")
-    public ResponseEntity<?> getByCategoryId(@PathVariable String Id) {
-        return categoryServiceImpl.getByCategory(Id);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getByCategoryId(@PathVariable String id) {
+        return categoryServiceImpl.getByCategory(id);
     }
-    @DeleteMapping("/{Id}")
-    public ResponseModel deleteCategory(@PathVariable String Id) {
+    @DeleteMapping("/{id}")
+    public ResponseModel deleteCategory(@PathVariable String id) {
 
-        return categoryServiceImpl.deleteCategory(Id);
+        return categoryServiceImpl.deleteCategory(id);
     }
+    @PutMapping("/{id}")
+    public ResponseModel updateCategory(@PathVariable String id, @RequestBody CategoryDto categoryDto) {
+
+        return categoryServiceImpl.updateCategory(id, categoryDto);
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> searchCategory(@RequestParam("search") String value) {
+        return categoryServiceImpl.searchCategory(value);
+    }
+    @PutMapping("/{id}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable String id, @PathVariable Status status) {
+
+        return categoryServiceImpl.updateCategoryStatus(id, status);
+    }
+
 }
