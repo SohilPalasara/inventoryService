@@ -23,4 +23,6 @@ Optional<List<Category>> findOnlyParentCategories();
     Optional<List<Category>> searchByKeyword(@Param("value") String value);
 
     Optional<List<Category>> findByIsDeletedFalse();
+
+    Optional<List<Category>> findByParentCategoryIdAndIsDeletedFalse(String id);
 }

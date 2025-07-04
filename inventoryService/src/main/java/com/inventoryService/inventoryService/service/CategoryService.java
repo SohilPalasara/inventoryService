@@ -14,4 +14,5 @@ public interface CategoryService {
     public ResponseEntity<?> searchCategory(String value);
     public ResponseEntity<?> updateCategoryStatus(String id, Status inputStatus);
     public ResponseEntity<?> getAllCategoryByParent();
+    public ResponseEntity<?> getByParentCategory(String Id);
 }

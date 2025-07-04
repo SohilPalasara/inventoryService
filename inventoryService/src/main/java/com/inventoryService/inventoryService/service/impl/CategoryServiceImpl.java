@@ -250,4 +250,23 @@ public class CategoryServiceImpl implements CategoryService {
                     .body("An error occurred: " + e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> getByParentCategory(String Id) {
+        try {
+            Optional<List<Category>> categoryOptional = categoryRepository.findByParentCategoryIdAndIsDeletedFalse(Id);
+
+            if (categoryOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No categoryId found");
+            }
+            List<CategoryDto> categoryDtoList = categoryOptional.get().stream()
+                    .map(category -> CategoryDto.convertToDto(category))
+                    .toList();
+
+            return ResponseEntity.ok(categoryDtoList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
+    }
 }
