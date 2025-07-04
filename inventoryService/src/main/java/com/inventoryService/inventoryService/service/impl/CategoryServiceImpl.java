@@ -234,13 +234,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> getAllCategoryByParent() {
         try {
-            Optional<List<Category>> categories = categoryRepository.findByIsDeletedFalse();
+            Optional<List<Category>> categories = categoryRepository.findOnlyParentCategories();
 
             if (categories.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Category Found");
             }
             List<CategoryDto> categoryDtoList = categories.get().stream()
-                    .filter(category -> category.getParentCategory()==null)
                     .map(category -> CategoryDto.convertToDto(category))
                     .toList();
 

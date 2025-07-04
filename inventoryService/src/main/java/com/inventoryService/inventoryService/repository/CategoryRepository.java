@@ -16,9 +16,11 @@ public interface CategoryRepository extends JpaRepository<Category , String> {
 
     Optional<Category> findByIsDeletedAndCategoryName(boolean b, String categoryName);
 
-
-    Optional<List<Category>> findByIsDeletedFalse();
+@Query("select c from Category c where c.isDeleted=false And c.parentCategory Is Null ")
+Optional<List<Category>> findOnlyParentCategories();
 
 @Query("select c from Category c  where c.isDeleted=false And c.categoryName Like%:value%")
     Optional<List<Category>> searchByKeyword(@Param("value") String value);
+
+    Optional<List<Category>> findByIsDeletedFalse();
 }
