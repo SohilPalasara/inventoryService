@@ -48,5 +48,8 @@ public class CategoryController {
 
         return categoryServiceImpl.updateCategoryStatus(id, status);
     }
-
+    @GetMapping("/getAllCategoryByParent")
+    public ResponseEntity<?> getAllCategoryByParent() {
+        return categoryServiceImpl.getAllCategoryByParent();
+    }
 }

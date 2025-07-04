@@ -205,7 +205,7 @@ public class CategoryServiceImpl implements CategoryService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
             }
 
-            Category category= optionalCategory.get();
+            Category category = optionalCategory.get();
             Status currentStatus = category.getStatus();
 
             if (currentStatus.equals(inputStatus)) {
@@ -228,6 +228,27 @@ public class CategoryServiceImpl implements CategoryService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating status: " + ex.getMessage());
 
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getAllCategoryByParent() {
+        try {
+            Optional<List<Category>> categories = categoryRepository.findByIsDeletedFalse();
+
+            if (categories.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Category Found");
+            }
+            List<CategoryDto> categoryDtoList = categories.get().stream()
+                    .filter(category -> category.getParentCategory()==null)
+                    .map(category -> CategoryDto.convertToDto(category))
+                    .toList();
+
+            return ResponseEntity.ok(categoryDtoList);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
         }
     }
 }
