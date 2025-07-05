@@ -30,6 +30,8 @@ public class Product {
     private Status status;
     @ManyToOne
     private Category category;
+    @ManyToOne
+    private Organization organization;
 
     @PrePersist
     private void setValue(){
